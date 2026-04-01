@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light background -->
+    <color name="bg_dark">#F3F4F6</color> <!-- Keeping name bg_dark for layout compatibility -->
+    <color name="bg_surface">#FFFFFF</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_card_elevated">#E5E7EB</color>
+
+    <!-- Brand colors -->
+    <color name="cyan">#00BCD4</color>
+    <color name="cyan_dark">#0097A7</color>
+    <color name="cyan_tint">#1A00BCD4</color>
+
+    <!-- Status colors -->
+    <color name="status_pending">#FF8F00</color>
+    <color name="status_pending_bg">#2FFF8F00</color>
+    <color name="status_in_progress">#00BCD4</color>
+    <color name="status_in_progress_bg">#2F00BCD4</color>
+    <color name="status_resolved">#00C853</color>
+    <color name="status_resolved_bg">#2F00C853</color>
+    <color name="status_rejected">#D50000</color>
+    <color name="status_rejected_bg">#2FD50000</color>
+
+    <!-- Community card tints -->
+    <color name="purple_accent">#7C4DFF</color>
+    <color name="purple_tint">#1A7C4DFF</color>
+    <color name="amber_accent">#FF8F00</color>
+    <color name="amber_tint">#1AFF8F00</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#4B5563</color>
+    <color name="text_dim">#9CA3AF</color>
+    <color name="text_cyan">#0097A7</color>
+
+    <!-- UI elements -->
+    <color name="divider">#1A000000</color>
+    <color name="chip_bg">#0D000000</color>
+    <color name="chip_selected_bg">#00BCD4</color>
+    <color name="chip_selected_text">#FFFFFF</color>
+
+    <!-- Standard -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

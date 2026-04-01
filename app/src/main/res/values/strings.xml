@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">CivicConnect</string>
+    <string name="app_tagline">Report. Connect. Resolve.</string>
+
+    <!-- Auth -->
+    <string name="welcome_back">Welcome Back</string>
+    <string name="sign_in_to">Sign in to CivicConnect</string>
+    <string name="create_account">Create Account</string>
+    <string name="choose_username">Choose your username</string>
+    <string name="username_hint">This is how you\'ll appear on community posts. You can\'t change this later.</string>
+
+    <!-- Labels -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="username">Username</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="get_started">Get Started</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+
+    <!-- Home -->
+    <string name="report_issue">Report Issue</string>
+    <string name="report_subtitle">Submit a new civic problem</string>
+    <string name="community">Community</string>
+    <string name="community_subtitle">Browse &amp; post in the feed</string>
+    <string name="my_reports">My Reports</string>
+    <string name="my_reports_subtitle">Track your submitted issues</string>
+    <string name="reports_raised">Reports Raised</string>
+    <string name="upvotes_received">Upvotes Received</string>
+
+    <!-- Report Issue -->
+    <string name="add_photo">Add a photo</string>
+    <string name="issue_title">Issue Title</string>
+    <string name="issue_title_hint">Briefly describe the problem…</string>
+    <string name="category">Category</string>
+    <string name="location">Location</string>
+    <string name="use_my_location">📍 Use My Location</string>
+    <string name="locality_hint">Or type your locality…</string>
+    <string name="submit_report">Submit Report</string>
+
+    <!-- Status labels -->
+    <string name="status_pending">PENDING</string>
+    <string name="status_in_progress">IN PROGRESS</string>
+    <string name="status_resolved">RESOLVED</string>
+    <string name="status_rejected">REJECTED</string>
+
+    <!-- Community -->
+    <string name="new_post">New Post</string>
+    <string name="post_body_hint">What\'s on your mind?</string>
+    <string name="post_btn">Post</string>
+
+    <!-- Errors -->
+    <string name="error_email_empty">Email is required</string>
+    <string name="error_email_invalid">Enter a valid email address</string>
+    <string name="error_password_empty">Password is required</string>
+    <string name="error_password_short">Password must be at least 6 characters</string>
+    <string name="error_passwords_dont_match">Passwords do not match</string>
+    <string name="error_username_empty">Username is required</string>
+    <string name="error_username_format">3–20 chars, letters/numbers/underscores only</string>
+    <string name="error_title_empty">Issue title is required</string>
+    <string name="error_category_required">Please select a category</string>
+    <string name="error_post_empty">Post cannot be empty</string>
+    <string name="error_network">No connection. Check your internet.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_login">Invalid email or password</string>
+
+    <!-- Success -->
+    <string name="issue_submitted">Issue reported! ✓</string>
+
+    <!-- Empty states -->
+    <string name="no_reports">No reports yet. Tap Report Issue to get started.</string>
+    <string name="no_posts">No posts yet. Be the first to post!</string>
+</resources>
