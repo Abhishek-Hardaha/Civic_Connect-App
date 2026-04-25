@@ -1,0 +1,17 @@
+{
+  "frontendFolder": "C:/Users/ABHISHEK/Desktop/admin-dashboard/./frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "C:/Users/ABHISHEK/Desktop/admin-dashboard/./frontend/generated/jar-resources",
+  "staticOutput": "C:/Users/ABHISHEK/Desktop/admin-dashboard/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "statsOutput": "C:\\Users\\ABHISHEK\\Desktop\\admin-dashboard\\target\\classes\\META-INF\\VAADIN\\config",
+  "frontendBundleOutput": "C:\\Users\\ABHISHEK\\Desktop\\admin-dashboard\\target\\classes\\META-INF\\VAADIN\\webapp",
+  "devBundleOutput": "C:/Users/ABHISHEK/Desktop/admin-dashboard/target/dev-bundle/webapp",
+  "devBundleStatsOutput": "C:/Users/ABHISHEK/Desktop/admin-dashboard/target/dev-bundle/config",
+  "jarResourcesFolder": "C:/Users/ABHISHEK/Desktop/admin-dashboard/./frontend/generated/jar-resources",
+  "themeName": "",
+  "clientServiceWorkerSource": "C:\\Users\\ABHISHEK\\Desktop\\admin-dashboard\\target\\sw.ts",
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
+}
