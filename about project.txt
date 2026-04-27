@@ -1,0 +1,196 @@
+# CivicPulse — Android App Agent Prompt
+
+## What You Are Building
+A civic issue reporting Android app called **CivicPulse**. Citizens can report local infrastructure problems, follow community posts, and track the status of their reports. The backend is **Supabase** (PostgreSQL + Auth + Storage). There is a separate admin dashboard (not your concern) that updates report statuses.
+
+---
+
+## Non-Negotiable Rules
+- Java only. Zero Kotlin. Zero Jetpack Compose.
+- minSdk 24, targetSdk 34.
+- No AsyncTask. Use ExecutorService + Handler(Looper.getMainLooper()) for all threading.
+- No ViewModel, no LiveData, no Hilt. Plain Java patterns only.
+- HTTP via OkHttp3. JSON via Gson. Images via Glide. Camera via CameraX. Location via FusedLocationProviderClient.
+- Supabase URL and anon key come from local.properties via BuildConfig. Never hardcode credentials.
+- Every network call is wrapped in try/catch. No network error should ever crash the app.
+- Activities handle UI only. Business logic lives in service classes.
+
+---
+
+## Screens to Build (11 Activities)
+
+### 1. SplashActivity
+- Show logo and app name centered on a dark background.
+- After 1.5 seconds, check if a session token exists in SharedPreferences.
+- If logged in → go to Home. If not → go to Login.
+
+### 2. LoginActivity
+- Email and password fields with a Login button.
+- On submit, call Supabase Auth sign-in endpoint.
+- On success, save the JWT token and user ID, then fetch the user's profile (username + city) and save those too. Navigate to Home.
+- On failure, show an inline error message below the form.
+- Link at the bottom: "Don't have an account? Sign up" → navigates to SignUp.
+
+### 3. SignUpActivity
+- Email, password, and confirm password fields.
+- Validate passwords match and are at least 6 characters before submitting.
+- On success, save the JWT token and user ID. Navigate to UsernameSetup.
+- Link: "Already have an account? Login" → goes back to Login.
+
+### 4. UsernameSetupActivity
+- Shown only once after first signup. Block the back button so the user must complete it.
+- Two fields: Username (min 3 chars) and City (e.g. Pune).
+- Before creating, check if the username is already taken via a Supabase query. Show error if taken.
+- On success, create a row in the profiles table and save username + city to SharedPreferences. Navigate to Home.
+
+### 5. HomeActivity
+- Greeting at the top: "Hello, {username} 👋" and "Reporting from {city}" below it.
+- Three large card buttons stacked vertically:
+  - 🚨 Report an Issue → ReportIssueActivity
+  - 📋 My Reports → MyReportsActivity
+  - 👥 Community → CommunityActivity
+- A horizontal strip of recent reports at the bottom (up to 5, fetched on resume). Tap any → ReportDetailActivity.
+- Profile icon (initials in a circle) in the top-right corner → ProfileActivity.
+
+### 6. ReportIssueActivity
+- Back arrow in toolbar, title "Report an Issue".
+- Large image preview area at the top with two buttons below: "Camera" and "Gallery".
+  - Camera: create a temp file via FileProvider, launch CameraX capture intent.
+  - Gallery: launch MediaStore image picker.
+  - On result: scale the bitmap down to max 1280px and show preview.
+- Title field (required).
+- Description field (optional, multiline).
+- Category selector: a 3-column grid of 7 tappable cards. One card is always selected at a time. Selected card gets a highlighted border. Categories: Road & Transport, Garbage & Pollution, Water & Drainage, Electricity & Lighting, Public Nuisance & Safety, Animal Control, Other.
+- Location section: a text field for locality + a "Use My Location" button.
+  - On button tap: request location permission if needed, get GPS coordinates via FusedLocationProviderClient, reverse-geocode to a locality name via Android Geocoder, auto-fill the text field.
+- Submit button at the bottom.
+  - Validate: title, category, and locality must not be empty.
+  - If image selected: compress to JPEG at 70% quality, upload to Supabase Storage bucket "issue-images", get the public URL.
+  - Insert a new row into the issues table with all fields. Status defaults to PENDING.
+  - On success: Toast "Issue reported!" and finish.
+
+### 7. MyReportsActivity
+- Toolbar with back arrow and title "My Reports".
+- Filter chips row (horizontal scroll): All, Pending, In Progress, Resolved, Rejected.
+- Vertical RecyclerView of the user's own reports only (enforced by Supabase RLS on the backend).
+- Each report card shows: thumbnail (if any), title, category, date, status badge (colour-coded).
+- Tapping a card → ReportDetailActivity.
+- Pull-to-refresh to re-fetch.
+- Empty state text when no reports exist.
+- Refresh the list every time the screen resumes (onResume).
+
+### 8. ReportDetailActivity
+- Receives the Issue object from the previous screen via Intent.
+- Full-width image at the top (load from URL via Glide, show placeholder if none).
+- Below the image: status badge (colour-coded pill), title, category chip, formatted date, description, and "📍 {locality}" text.
+- Status colours: Pending = amber, In Progress = cyan, Resolved = green, Rejected = red/pink.
+- Read-only screen. No editing here — status is changed only by the admin dashboard.
+
+### 9. CommunityActivity
+- Toolbar title "Community". No back arrow (top-level screen).
+- Vertical RecyclerView of all community posts from all users (visible to everyone).
+- Each post card shows: username, date, optional image (hidden if no image), title, description (2 lines max), upvote button.
+- Upvote button: shows "▲ {count} Upvotes". Tapping toggles between upvoted and not-upvoted states.
+  - If not upvoted → insert a row into post_upvotes. Update UI optimistically (increment count, highlight button) before server confirms.
+  - If already upvoted → delete the row from post_upvotes. Decrement count and revert button style.
+- Floating Action Button "+" in the bottom-right → AddPostActivity.
+- Pull-to-refresh. Empty state text when no posts exist.
+
+### 10. AddPostActivity
+- Toolbar with back arrow, title "New Post".
+- Same image picker flow as ReportIssueActivity (Camera + Gallery + preview). Image is optional.
+- Title field (required).
+- Description field (optional, multiline).
+- "Post to Community" button.
+  - Validate title not empty.
+  - If image: compress + upload to bucket "post-images".
+  - Insert row into community_posts table.
+  - On success: Toast "Posted!" and finish.
+
+### 11. ProfileActivity
+- Circular avatar showing the user's initials.
+- Username (large) + city + "Member since {date}" in smaller text.
+- Row of three stat cards: Reports Raised, Issues Resolved, Upvotes Received (all fetched from Supabase).
+- Section header "🏆 City Leaderboard".
+- A highlighted card showing the user's own rank: "#4 of 312 users in Pune".
+- RecyclerView list of the full leaderboard below, sorted by resolved count.
+  - Top 3 show medal emojis (🥇 🥈 🥉). Others show their rank number.
+  - The current user's row has a distinct background/text colour.
+- Leaderboard is fetched by calling the Supabase RPC function get_city_leaderboard with the user's city.
+
+---
+
+## Data & Backend Rules
+
+- **issues** table: only the owner can read their own rows (Supabase RLS). The app always filters by user_id.
+- **community_posts** table: all authenticated users can read all rows. Only the owner can insert/delete.
+- **post_upvotes** table: composite primary key (post_id, user_id) prevents duplicate votes. Insert to upvote, delete to un-upvote.
+- **profiles** table: insert on signup, read on login to restore session data.
+- All auth calls go to `/auth/v1/`. All data calls go to `/rest/v1/`. All uploads go to `/storage/v1/object/`.
+- Every authenticated request sends two headers: `apikey` (the anon key) and `Authorization: Bearer {jwt}`.
+
+---
+
+## Service Layer (4 classes)
+
+- **AuthService** — handles signUp, signIn, signOut against Supabase Auth.
+- **SupabaseService** — handles all PostgREST data calls (profiles, issues, community_posts, post_upvotes, leaderboard RPC). Singleton.
+- **ImageUploadService** — handles compressing a Bitmap and uploading bytes to a named Supabase Storage bucket. Returns the public URL.
+- **LocationService** — wraps FusedLocationProviderClient + Android Geocoder. Returns lat, lng, and a locality name string.
+
+All service methods are asynchronous. They take a callback interface as their last parameter. Results are always delivered on the main thread.
+
+---
+
+## Utility Layer (2 classes)
+
+- **SessionManager** — wraps SharedPreferences. Stores and retrieves: userId, accessToken, username, city. Has isLoggedIn(), saveSession(), clearSession().
+- **ImageUtils** — static helpers: scale a Bitmap to max dimensions, compress a Bitmap to JPEG bytes, convert a URI to a Bitmap.
+
+---
+
+## Adapters (3 classes)
+
+- **ReportAdapter** — binds Issue list to report cards. Has a filterByStatus() method that updates the displayed list without re-fetching from the network.
+- **PostAdapter** — binds CommunityPost list to post cards. Handles optimistic upvote toggle locally. Has an updatePost() method to sync a single card after server confirms.
+- **LeaderboardAdapter** — binds LeaderboardEntry list. Highlights the row that matches the current user's username. Shows medal emojis for top 3.
+
+---
+
+## Permissions Required
+
+- INTERNET — automatic, no dialog needed.
+- ACCESS_FINE_LOCATION + ACCESS_COARSE_LOCATION — requested when user taps "Use My Location".
+- CAMERA — requested when user taps the Camera button.
+- READ_MEDIA_IMAGES (Android 13+) or READ_EXTERNAL_STORAGE (Android 12 and below) — requested when user taps Gallery.
+
+For every dangerous permission: if denied, show an AlertDialog explaining why it is needed. Never silently fail.
+
+---
+
+## Polish Requirements (apply to every screen)
+
+- Show a ProgressBar or SwipeRefreshLayout spinner during any network call.
+- Disable submit buttons while a request is in flight to prevent duplicate submissions.
+- Show empty-state text in list screens when there is nothing to display.
+- Validate all required form fields before making any network call. Show errors on the input field itself, not just a Toast.
+- Format all dates from ISO 8601 to "Jan 15, 2025" before displaying.
+- Dismiss the soft keyboard when a form is submitted.
+- All secondary screens must have a functional back arrow in the toolbar.
+- The status bar should be transparent, with content drawn behind it.
+- Images in lists must load asynchronously via Glide with a placeholder while loading.
+
+---
+
+## Generation Order
+
+Build in this order so no file depends on something that doesn't exist yet:
+1. Gradle config files
+2. Manifest + file_paths.xml
+3. Resource files (colors, strings, arrays, themes)
+4. Model classes (Issue, CommunityPost, Profile, LeaderboardEntry)
+5. Utility classes (SessionManager, ImageUtils)
+6. Service classes (AuthService, SupabaseService, ImageUploadService, LocationService)
+7. Adapter classes (ReportAdapter, PostAdapter, LeaderboardAdapter)
+8. Layout XML files (item layouts first, then activity layouts)
+9. Activity Java classes (Splash → Login → SignUp → UsernameSetup → Home → ReportIssue → MyReports → ReportDetail → Community → AddPost → Profile)

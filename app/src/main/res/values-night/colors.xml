@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark background -->
-    <color name="bg_dark">#05050f</color>
-    <color name="bg_surface">#0d0d20</color>
-    <color name="bg_card">#12122a</color>
-    <color name="bg_card_elevated">#1a1a35</color>
+    <!-- Premium Slate Dark Theme -->
+    <color name="bg_dark">#020617</color> <!-- Slate 950 -->
+    <color name="bg_surface">#0F172A</color> <!-- Slate 900 -->
+    <color name="bg_card">#1E293B</color> <!-- Slate 800 -->
+    <color name="bg_card_elevated">#334155</color> <!-- Slate 700 -->
 
-    <!-- Brand colors -->
-    <color name="cyan">#00e5ff</color>
-    <color name="cyan_dark">#00b8d4</color>
-    <color name="cyan_tint">#1A00e5ff</color>
+    <!-- Brand colors - Vibrant in Dark Mode -->
+    <color name="cyan">#22D3EE</color> <!-- Cyan 400 -->
+    <color name="cyan_dark">#0891B2</color> <!-- Cyan 600 -->
+    <color name="cyan_tint">#2622D3EE</color>
 
-    <!-- Status colors -->
-    <color name="status_pending">#FFB300</color>
-    <color name="status_pending_bg">#2FFFB300</color>
-    <color name="status_in_progress">#00e5ff</color>
-    <color name="status_in_progress_bg">#2F00e5ff</color>
-    <color name="status_resolved">#00E676</color>
-    <color name="status_resolved_bg">#2F00E676</color>
-    <color name="status_rejected">#FF5252</color>
-    <color name="status_rejected_bg">#2FFF5252</color>
+    <!-- Status colors - High Visibility -->
+    <color name="status_pending">#FB923C</color> <!-- Orange 400 -->
+    <color name="status_pending_bg">#26FB923C</color>
+    <color name="status_in_progress">#22D3EE</color>
+    <color name="status_in_progress_bg">#2622D3EE</color>
+    <color name="status_resolved">#4ADE80</color> <!-- Green 400 -->
+    <color name="status_resolved_bg">#264ADE80</color>
+    <color name="status_rejected">#F87171</color> <!-- Red 400 -->
+    <color name="status_rejected_bg">#26F87171</color>
 
-    <!-- Community card tints -->
-    <color name="purple_accent">#BB86FC</color>
-    <color name="purple_tint">#1ABB86FC</color>
-    <color name="amber_accent">#FFB300</color>
-    <color name="amber_tint">#1AFFB300</color>
+    <!-- Accents -->
+    <color name="purple_accent">#A78BFA</color> <!-- Violet 400 -->
+    <color name="purple_tint">#26A78BFA</color>
+    <color name="amber_accent">#FBBF24</color> <!-- Amber 400 -->
+    <color name="amber_tint">#26FBBF24</color>
 
-    <!-- Text colors -->
-    <color name="text_primary">#FFFFFFFF</color>
-    <color name="text_secondary">#99FFFFFF</color>
-    <color name="text_dim">#66FFFFFF</color>
-    <color name="text_cyan">#00e5ff</color>
+    <!-- Text colors - Optimized for Dark -->
+    <color name="text_primary">#F8FAFC</color> <!-- Slate 50 -->
+    <color name="text_secondary">#CBD5E1</color> <!-- Slate 300 -->
+    <color name="text_dim">#64748B</color> <!-- Slate 500 -->
+    <color name="text_cyan">#22D3EE</color>
 
     <!-- UI elements -->
-    <color name="divider">#1AFFFFFF</color>
-    <color name="chip_bg">#1AFFFFFF</color>
-    <color name="chip_selected_bg">#00e5ff</color>
-    <color name="chip_selected_text">#000000</color>
+    <color name="divider">#1AFFFFFF</color> <!-- 10% White -->
+    <color name="chip_bg">#26FFFFFF</color> <!-- 15% White -->
+    <color name="chip_selected_bg">#22D3EE</color>
+    <color name="chip_selected_text">#020617</color>
 
     <!-- Standard -->
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="transparent">#00000000</color>
+    <color name="splash_bg_color">#000000</color>
+
+    <!-- Semantic Text on Surfaces -->
+    <color name="on_primary">#020617</color> <!-- Dark text on Cyan -->
+    <color name="on_surface">#F8FAFC</color>
 </resources>

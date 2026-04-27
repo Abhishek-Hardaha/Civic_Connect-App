@@ -19,6 +19,7 @@ public final class AppConstants {
     public static final String PREF_REFRESH     = "refresh_token";
     public static final String PREF_USER_ID     = "user_id";
     public static final String PREF_USERNAME    = "username";
+    public static final String PREF_CITY        = "city";
     public static final String PREF_THEME_MODE  = "theme_mode";
 
     // --- Theme Mode Values ---

@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_dark"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="32dp"
         android:gravity="center_horizontal">
 
         <!-- Logo row -->
@@ -18,39 +19,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="60dp">
+            android:layout_marginTop="80dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Civic"
-                android:textColor="@color/white"
-                android:textSize="28sp"
+                android:textColor="@color/text_primary"
+                android:textSize="32sp"
                 android:textStyle="bold"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Connect"
+                android:text="Pulse"
                 android:textColor="@color/cyan"
-                android:textSize="28sp"
+                android:textSize="32sp"
                 android:textStyle="bold"/>
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/welcome_back"
+            android:layout_marginTop="40dp"
+            android:text="Welcome Back"
             android:textColor="@color/text_primary"
-            android:textSize="28sp"
+            android:textSize="32sp"
             android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/sign_in_to"
+            android:layout_marginTop="12dp"
+            android:text="Sign in to continue making a difference"
             android:textColor="@color/text_secondary"
-            android:textSize="14sp"/>
+            android:textSize="15sp"
+            android:gravity="center"/>
 
         <!-- Email -->
         <com.google.android.material.textfield.TextInputLayout
@@ -58,9 +60,13 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="48dp"
             android:hint="@string/email"
-            app:boxStrokeColor="@color/text_dim"
+            app:boxStrokeColor="@color/cyan"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp"
             app:hintTextColor="@color/text_secondary">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -69,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/text_primary"
+                android:textSize="16sp"
                 android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,16 +87,23 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/password"
-            app:boxStrokeColor="@color/text_dim"
+            app:boxStrokeColor="@color/cyan"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp"
             app:hintTextColor="@color/text_secondary"
-            app:passwordToggleEnabled="true">
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/text_secondary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:inputType="textPassword"
                 android:textColor="@color/text_primary"
+                android:textSize="16sp"
                 android:imeOptions="actionDone"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -106,34 +120,32 @@
         <!-- Sign In Button -->
         <Button
             android:id="@+id/btn_sign_in"
+            style="@style/CivicConnect.Button.Primary"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="24dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
             android:text="@string/sign_in"
-            android:backgroundTint="@color/cyan"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            android:textSize="18sp"/>
 
         <!-- Sign Up link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="24dp">
+            android:layout_marginTop="32dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account? "
                 android:textColor="@color/text_secondary"
-                android:textSize="14sp"/>
+                android:textSize="15sp"/>
             <TextView
                 android:id="@+id/tv_sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign Up"
                 android:textColor="@color/cyan"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:clickable="true"
                 android:focusable="true"/>

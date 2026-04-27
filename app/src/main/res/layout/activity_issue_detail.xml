@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_dark"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -27,18 +28,25 @@
             android:orientation="vertical">
 
             <!-- Issue Image -->
-            <ImageView
-                android:id="@+id/iv_issue_image"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_issue_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:visibility="gone"/>
+                android:layout_height="280dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="0dp"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/iv_issue_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"/>
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="24dp">
 
                 <!-- Category + Status row -->
                 <LinearLayout
@@ -51,11 +59,12 @@
                         android:id="@+id/tv_category"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="6dp"
                         android:background="@drawable/bg_chip"
                         android:textColor="@color/text_secondary"
-                        android:textSize="12sp"/>
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
 
                     <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
 
@@ -63,8 +72,8 @@
                         android:id="@+id/tv_status_badge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="14dp"
-                        android:paddingVertical="5dp"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="6dp"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:background="@drawable/bg_status_pending"/>
@@ -75,34 +84,36 @@
                     android:id="@+id/tv_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="20dp"
                     android:textColor="@color/text_primary"
-                    android:textSize="22sp"
-                    android:textStyle="bold"/>
-
-                <!-- Date -->
-                <TextView
-                    android:id="@+id/tv_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/text_dim"
-                    android:textSize="13sp"/>
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="4dp"/>
 
                 <!-- Locality -->
                 <TextView
                     android:id="@+id/tv_locality"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/cyan"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     android:visibility="gone"/>
+
+                <!-- Date -->
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginVertical="20dp"
+                    android:layout_marginVertical="32dp"
                     android:background="@color/divider"/>
 
                 <!-- Resolution Section (visible only when resolved) -->
@@ -112,55 +123,54 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/bg_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp">
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:background="@color/status_resolved"
-                            android:layout_marginBottom="12dp"/>
+                        android:padding="24dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="✅ Issue Resolved"
                             android:textColor="@color/status_resolved"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tv_resolved_at"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:textColor="@color/text_dim"
-                            android:textSize="13sp"/>
+                            android:layout_marginTop="8dp"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp"/>
 
                         <TextView
                             android:id="@+id/tv_resolution_note"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="14sp"
+                            android:layout_marginTop="16dp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp"
                             android:visibility="gone"/>
 
-                        <ImageView
-                            android:id="@+id/iv_resolution_photo"
+                        <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
-                            android:layout_height="180dp"
-                            android:layout_marginTop="12dp"
-                            android:scaleType="centerCrop"
-                            android:background="@drawable/bg_card_rounded"
-                            android:clipToOutline="true"
-                            android:visibility="gone"/>
+                            android:layout_height="220dp"
+                            android:layout_marginTop="20dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp">
+                            <ImageView
+                                android:id="@+id/iv_resolution_photo"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:visibility="gone"/>
+                        </androidx.cardview.widget.CardView>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>

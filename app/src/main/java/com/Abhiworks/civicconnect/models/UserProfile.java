@@ -14,6 +14,9 @@ public class UserProfile {
     @SerializedName("username")
     private String username;
 
+    @SerializedName("city")
+    private String city;
+
     @SerializedName("reports_raised")
     private int reportsRaised;
 
@@ -27,6 +30,7 @@ public class UserProfile {
 
     public String getId()           { return id; }
     public String getUsername()     { return username; }
+    public String getCity()         { return city; }
     public int getReportsRaised()   { return reportsRaised; }
     public int getTotalUpvotes()    { return totalUpvotes; }
     public String getCreatedAt()    { return createdAt; }

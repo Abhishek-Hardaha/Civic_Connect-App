@@ -4,16 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="6dp"
+    android:layout_marginVertical="12dp"
     app:cardBackgroundColor="@color/bg_card"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp">
+    app:cardCornerRadius="32dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="14dp">
+        android:padding="24dp">
 
         <!-- Author row -->
         <LinearLayout
@@ -25,11 +25,11 @@
             <!-- Avatar circle with initial -->
             <TextView
                 android:id="@+id/tv_avatar"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:background="@drawable/bg_icon_circle_cyan"/>
 
@@ -38,22 +38,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginStart="10dp">
+                android:layout_marginStart="16dp">
 
                 <TextView
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tv_timestamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_dim"
-                    android:textSize="10sp"/>
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:layout_marginTop="2dp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -62,22 +63,29 @@
             android:id="@+id/tv_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            android:layout_marginTop="10dp"
-            android:maxLines="3"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="6"
             android:ellipsize="end"/>
 
         <!-- Optional image -->
-        <ImageView
-            android:id="@+id/iv_post_image"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_post_image"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginTop="10dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/bg_card_rounded"
-            android:clipToOutline="true"
-            android:visibility="gone"/>
+            android:layout_height="240dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/iv_post_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"/>
+        </androidx.cardview.widget.CardView>
 
         <!-- Upvote row -->
         <LinearLayout
@@ -85,21 +93,21 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:id="@+id/btn_upvote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="6dp"
-                android:background="@drawable/bg_status_pending"
-                android:textColor="@color/text_dim"
-                android:textSize="13sp"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:background="@drawable/bg_chip"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 android:text="▲  0"
                 android:clickable="true"
                 android:focusable="true"/>
         </LinearLayout>
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

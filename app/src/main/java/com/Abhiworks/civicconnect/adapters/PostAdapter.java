@@ -85,10 +85,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.VH> {
 
         // Image
         if (post.hasImage()) {
-            h.ivImage.setVisibility(View.VISIBLE);
-            Glide.with(ctx).load(post.getImageUrl()).centerCrop().into(h.ivImage);
+            h.cardImage.setVisibility(View.VISIBLE);
+            Glide.with(ctx)
+                 .load(post.getImageUrl())
+                 .centerCrop()
+                 .placeholder(R.drawable.bg_placeholder)
+                 .error(R.drawable.bg_placeholder)
+                 .into(h.ivImage);
         } else {
-            h.ivImage.setVisibility(View.GONE);
+            h.cardImage.setVisibility(View.GONE);
         }
 
         // Upvote button
@@ -115,6 +120,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.VH> {
     static class VH extends RecyclerView.ViewHolder {
         TextView  tvAvatar, tvUsername, tvTimestamp, tvBody, btnUpvote;
         ImageView ivImage;
+        View cardImage;
 
         VH(View v) {
             super(v);
@@ -123,6 +129,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.VH> {
             tvTimestamp = v.findViewById(R.id.tv_timestamp);
             tvBody      = v.findViewById(R.id.tv_body);
             ivImage     = v.findViewById(R.id.iv_post_image);
+            cardImage   = v.findViewById(R.id.card_post_image);
             btnUpvote   = v.findViewById(R.id.btn_upvote);
         }
     }

@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                 String userId  = JsonParser.parseUserId(json);
 
                 SharedPreferences prefs = getSharedPreferences(AppConstants.PREFS_NAME, MODE_PRIVATE);
-                UserSession.get().init(jwt, refresh, userId, null);
+                UserSession.get().init(jwt, refresh, userId, null, null);
                 UserSession.get().saveToPrefs(prefs);
 
                 // Fetch profile to check username
@@ -90,8 +90,13 @@ public class LoginActivity extends AppCompatActivity {
                     public void onSuccess(com.Abhiworks.civicconnect.models.UserProfile profile) {
                         showLoader(false);
                         String username = profile != null ? profile.getUsername() : null;
+                        String city     = profile != null ? profile.getCity()     : null;
                         UserSession.get().setUsername(username);
-                        prefs.edit().putString(AppConstants.PREF_USERNAME, username).apply();
+                        UserSession.get().setCity(city);
+                        prefs.edit()
+                             .putString(AppConstants.PREF_USERNAME, username)
+                             .putString(AppConstants.PREF_CITY, city)
+                             .apply();
 
                         if (TextUtils.isEmpty(username)) {
                             startActivity(new Intent(LoginActivity.this, SetUsernameActivity.class));

@@ -1,6 +1,7 @@
 package com.Abhiworks.civicconnect.repository;
 
 import com.Abhiworks.civicconnect.models.Issue;
+import com.Abhiworks.civicconnect.models.LeaderboardEntry;
 import com.Abhiworks.civicconnect.models.UserProfile;
 import com.Abhiworks.civicconnect.utils.Callback;
 
@@ -25,4 +26,10 @@ public interface IssueRepository {
 
     /** Set the username on the user's profile (onboarding step). */
     void setUsername(String userId, String username, Callback<Void> callback);
+
+    /** Fetch leaderboard entries ordered by reports_raised. City may be null for global. */
+    void getLeaderboard(String city, Callback<List<LeaderboardEntry>> callback);
+
+    /** Fetch most recent issues (up to limit) for the current user. */
+    void getRecentIssues(String userId, int limit, Callback<List<Issue>> callback);
 }

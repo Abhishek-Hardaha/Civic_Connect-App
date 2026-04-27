@@ -35,6 +35,12 @@ public class JsonParser {
         return list != null ? list : new ArrayList<>();
     }
 
+    public static List<com.Abhiworks.civicconnect.models.LeaderboardEntry> parseLeaderboardList(String json) {
+        Type type = new TypeToken<List<com.Abhiworks.civicconnect.models.LeaderboardEntry>>(){}.getType();
+        List<com.Abhiworks.civicconnect.models.LeaderboardEntry> list = GSON.fromJson(json, type);
+        return list != null ? list : new ArrayList<>();
+    }
+
     /**
      * Parses the first element of a PostgREST array response as a UserProfile.
      * Returns null if the array is empty.

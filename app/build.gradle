@@ -63,6 +63,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.github.yalantis:ucrop:2.2.8'
 
     // Core
     implementation 'androidx.appcompat:appcompat:1.6.1'

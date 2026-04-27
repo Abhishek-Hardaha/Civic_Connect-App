@@ -2,49 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark">
+    android:background="@color/splash_bg_color">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <!-- App name -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Civic"
-                android:textColor="@color/white"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Connect"
-                android:textColor="@color/cyan"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"/>
-        </LinearLayout>
-
-        <!-- Tagline -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/app_tagline"
-            android:textColor="#99FFFFFF"
-            android:textSize="16sp"
-            android:letterSpacing="0.05"/>
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/splash_bg"
+        android:padding="40dp" />
 
 </FrameLayout>

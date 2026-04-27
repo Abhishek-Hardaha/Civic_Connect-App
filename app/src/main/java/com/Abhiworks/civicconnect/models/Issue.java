@@ -11,7 +11,7 @@ import java.util.Objects;
  * Field names use @SerializedName to match exact Supabase snake_case column names.
  * Status is set only by the admin dashboard — the app only reads and displays it.
  */
-public class Issue {
+public class Issue implements java.io.Serializable {
 
     private static final List<String> VALID_STATUSES = Arrays.asList(
             "pending", "in_progress", "resolved", "rejected"

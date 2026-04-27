@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.Abhiworks.civicconnect.models.Issue;
+import com.Abhiworks.civicconnect.models.LeaderboardEntry;
 import com.Abhiworks.civicconnect.models.UserProfile;
 import com.Abhiworks.civicconnect.service.SupabaseService;
 import com.Abhiworks.civicconnect.utils.AppConstants;
@@ -109,7 +110,7 @@ public class SupabaseIssueRepository implements IssueRepository {
     public void getProfile(String userId, Callback<UserProfile> callback) {
         String url = supabase.baseUrl + "/" + AppConstants.TABLE_PROFILES
                 + "?id=eq." + userId
-                + "&select=username,reports_raised,total_upvotes";
+                + "&select=username,city,reports_raised,total_upvotes,created_at";
         supabase.get(url, new Callback<String>() {
             @Override public void onSuccess(String json) {
                 UserProfile profile = JsonParser.parseProfile(json);
@@ -139,6 +140,52 @@ public class SupabaseIssueRepository implements IssueRepository {
         String body = "{\"username\":\"" + username + "\"}";
         supabase.patch(url, body, new Callback<String>() {
             @Override public void onSuccess(String json) { callback.onSuccess(null); }
+            @Override public void onError(Exception e) { callback.onError(e); }
+        });
+    }
+
+    // ── Leaderboard ──────────────────────────────────────────────────────────
+
+    /**
+     * Fetches top 50 profiles ordered by reports_raised descending.
+     * If city is non-null and non-empty, filters to that city.
+     * Rank is assigned client-side after parsing.
+     */
+    @Override
+    public void getLeaderboard(String city, Callback<java.util.List<LeaderboardEntry>> callback) {
+        StringBuilder url = new StringBuilder(supabase.baseUrl + "/" + AppConstants.TABLE_PROFILES
+                + "?select=username,city,reports_raised,total_upvotes"
+                + "&order=reports_raised.desc"
+                + "&limit=50");
+        if (city != null && !city.trim().isEmpty()) {
+            url.append("&city=eq.").append(city.trim());
+        }
+        supabase.get(url.toString(), new Callback<String>() {
+            @Override public void onSuccess(String json) {
+                java.util.List<LeaderboardEntry> list = JsonParser.parseLeaderboardList(json);
+                for (int i = 0; i < list.size(); i++) list.get(i).setRank(i + 1);
+                callback.onSuccess(list);
+            }
+            @Override public void onError(Exception e) { callback.onError(e); }
+        });
+    }
+
+    // ── Recent Reports ───────────────────────────────────────────────────────
+ 
+    /**
+     * Fetches up to 'limit' most recent issues for the user.
+     */
+    @Override
+    public void getRecentIssues(String userId, int limit, Callback<List<Issue>> callback) {
+        String url = supabase.baseUrl + "/" + AppConstants.TABLE_ISSUES
+                + "?user_id=eq." + userId
+                + "&select=id,title,status,category,image_url,created_at"
+                + "&order=created_at.desc"
+                + "&limit=" + limit;
+        supabase.get(url, new Callback<String>() {
+            @Override public void onSuccess(String json) {
+                callback.onSuccess(JsonParser.parseIssueList(json));
+            }
             @Override public void onError(Exception e) { callback.onError(e); }
         });
     }

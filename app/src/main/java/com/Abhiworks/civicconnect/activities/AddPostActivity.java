@@ -15,7 +15,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
+import android.content.pm.PackageManager;
 
 import com.Abhiworks.civicconnect.R;
 import com.Abhiworks.civicconnect.repository.SupabasePostRepository;
@@ -27,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +48,8 @@ public class AddPostActivity extends AppCompatActivity {
     private Uri selectedImageUri, cameraImageUri;
     private ActivityResultLauncher<Intent> galleryLauncher;
     private ActivityResultLauncher<Uri> cameraLauncher;
+    private ActivityResultLauncher<Intent> cropLauncher;
+    private ActivityResultLauncher<String> cameraPermissionLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +78,7 @@ public class AddPostActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        selectedImageUri = result.getData().getData();
-                        showSelectedImage(selectedImageUri);
+                        startCrop(result.getData().getData());
                     }
                 });
 
@@ -81,9 +86,29 @@ public class AddPostActivity extends AppCompatActivity {
                 new ActivityResultContracts.TakePicture(),
                 success -> {
                     if (success && cameraImageUri != null) {
-                        selectedImageUri = cameraImageUri;
-                        showSelectedImage(selectedImageUri);
+                        startCrop(cameraImageUri);
                     }
+                });
+
+        cropLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = UCrop.getOutput(result.getData());
+                        if (selectedImageUri != null) {
+                            showSelectedImage(selectedImageUri);
+                        }
+                    } else if (result.getResultCode() == UCrop.RESULT_ERROR) {
+                        Throwable cropError = UCrop.getError(result.getData());
+                        showSnackbar("Crop error: " + (cropError != null ? cropError.getMessage() : "Unknown"));
+                    }
+                });
+
+        cameraPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) openCameraAction();
+                    else showSnackbar("Camera permission is required");
                 });
     }
 
@@ -91,24 +116,55 @@ public class AddPostActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Add Photo")
                 .setItems(new String[]{"📷 Camera", "🖼 Gallery"}, (d, which) -> {
-                    if (which == 0) openCamera(); else openGallery();
+                    if (which == 0) checkCameraPermissionAndOpen(); else openGallery();
                 })
                 .show();
     }
 
-    private void openCamera() {
+    private void checkCameraPermissionAndOpen() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            openCameraAction();
+        } else {
+            cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA);
+        }
+    }
+
+    private void openCameraAction() {
         try {
-            File f = File.createTempFile("post_img_", ".jpg", getExternalCacheDir());
+            File cacheDir = getExternalCacheDir();
+            if (cacheDir == null) cacheDir = getCacheDir();
+            File f = File.createTempFile("post_img_", ".jpg", cacheDir);
             cameraImageUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", f);
             cameraLauncher.launch(cameraImageUri);
         } catch (IOException e) {
-            showSnackbar("Could not open camera");
+            showSnackbar("Could not prepare image file");
         }
     }
 
     private void openGallery() {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryLauncher.launch(i);
+    }
+
+    private void startCrop(Uri sourceUri) {
+        Uri destinationUri = Uri.fromFile(new File(getExternalCacheDir(), "crop_" + System.currentTimeMillis() + ".jpg"));
+        
+        UCrop.Options options = new UCrop.Options();
+        options.setCompressionQuality(80);
+        options.setToolbarColor(getColor(R.color.bg_dark));
+        options.setStatusBarColor(getColor(R.color.bg_dark));
+        options.setActiveControlsWidgetColor(getColor(R.color.cyan));
+        options.setToolbarWidgetColor(getColor(R.color.text_primary));
+        options.setToolbarTitle("Crop Photo");
+
+        Intent intent = UCrop.of(sourceUri, destinationUri)
+                .withAspectRatio(1, 1) // Post images are 1:1
+                .withMaxResultSize(1080, 1080)
+                .withOptions(options)
+                .getIntent(this);
+        
+        cropLauncher.launch(intent);
     }
 
     private void showSelectedImage(Uri uri) {

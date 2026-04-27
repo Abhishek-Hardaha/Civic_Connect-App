@@ -3,22 +3,23 @@ package com.Abhiworks.civicconnect.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.Abhiworks.civicconnect.R;
+import com.Abhiworks.civicconnect.adapters.RecentIssueAdapter;
+import com.Abhiworks.civicconnect.models.Issue;
 import com.Abhiworks.civicconnect.models.UserProfile;
 import com.Abhiworks.civicconnect.repository.SupabaseIssueRepository;
 import com.Abhiworks.civicconnect.service.SupabaseService;
 import com.Abhiworks.civicconnect.session.UserSession;
 import com.Abhiworks.civicconnect.utils.AppConstants;
-import com.Abhiworks.civicconnect.utils.AuthException;
 import com.Abhiworks.civicconnect.utils.Callback;
 
 import java.util.Calendar;
@@ -29,6 +30,8 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvGreeting, tvReportsRaised, tvUpvotes, tvPendingBadge, tvAvatar;
     private SupabaseIssueRepository issueRepo;
     private SupabaseService supabase;
+    private RecyclerView rvRecent;
+    private RecentIssueAdapter recentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +44,10 @@ public class HomeActivity extends AppCompatActivity {
         tvGreeting      = findViewById(R.id.tv_greeting);
         tvReportsRaised = findViewById(R.id.tv_reports_raised);
         tvUpvotes       = findViewById(R.id.tv_upvotes);
-        tvPendingBadge  = findViewById(R.id.tv_pending_badge);
+        tvPendingBadge  = findViewById(R.id.tv_reports_count);
         tvAvatar        = findViewById(R.id.btn_avatar);
 
-        // Set avatar initial
+        // Set avatar initial from username
         String username = UserSession.get().getUsername();
         if (username != null && !username.isEmpty()) {
             tvAvatar.setText(String.valueOf(username.charAt(0)).toUpperCase());
@@ -57,12 +60,25 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, CommunityActivity.class)));
         findViewById(R.id.card_my_reports).setOnClickListener(v ->
                 startActivity(new Intent(this, MyReportsActivity.class)));
+        findViewById(R.id.btn_view_all).setOnClickListener(v ->
+                startActivity(new Intent(this, MyReportsActivity.class)));
 
-        // Avatar popup menu
-        tvAvatar.setOnClickListener(v -> showAvatarMenu(v));
+        // Avatar → ProfileActivity
+        tvAvatar.setOnClickListener(v ->
+                startActivity(new Intent(this, ProfileActivity.class)));
 
         // Theme toggle
         findViewById(R.id.btn_theme).setOnClickListener(v -> showThemeDialog());
+
+        // Recent Reports List
+        rvRecent = findViewById(R.id.rv_recent_reports);
+        rvRecent.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recentAdapter = new RecentIssueAdapter(issue -> {
+            Intent intent = new Intent(this, IssueDetailActivity.class);
+            intent.putExtra("issue", issue);
+            startActivity(intent);
+        });
+        rvRecent.setAdapter(recentAdapter);
     }
 
     @Override
@@ -70,7 +86,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         updateGreeting();
         fetchStats();
+        fetchRecentReports();
     }
+
+    // ── Greeting ─────────────────────────────────────────────────────────────
 
     private void updateGreeting() {
         String username = UserSession.get().getUsername();
@@ -78,6 +97,8 @@ public class HomeActivity extends AppCompatActivity {
         String timeOfDay = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
         tvGreeting.setText("Good " + timeOfDay + ", " + (username != null ? username : "there") + " 👋");
     }
+
+    // ── Stats ─────────────────────────────────────────────────────────────────
 
     private void fetchStats() {
         String uid = UserSession.get().getUserId();
@@ -89,14 +110,21 @@ public class HomeActivity extends AppCompatActivity {
                 if (profile == null) return;
                 tvReportsRaised.setText(String.valueOf(profile.getReportsRaised()));
                 tvUpvotes.setText(String.valueOf(profile.getTotalUpvotes()));
+                
+                // Persist city in session if freshly fetched
+                if (profile.getCity() != null && UserSession.get().getCity() == null) {
+                    UserSession.get().setCity(profile.getCity());
+                    getSharedPreferences(AppConstants.PREFS_NAME, MODE_PRIVATE)
+                            .edit().putString(AppConstants.PREF_CITY, profile.getCity()).apply();
+                }
             }
-            @Override public void onError(Exception e) { /* silently fail — stats are decorative */ }
+            @Override public void onError(Exception e) { /* decorative — silent */ }
         });
 
-        // Fetch pending count for badge
-        issueRepo.getMyIssues(uid, new Callback<List<com.Abhiworks.civicconnect.models.Issue>>() {
+        // Pending badge
+        issueRepo.getMyIssues(uid, new Callback<List<Issue>>() {
             @Override
-            public void onSuccess(List<com.Abhiworks.civicconnect.models.Issue> issues) {
+            public void onSuccess(List<Issue> issues) {
                 long pending = issues.stream()
                         .filter(i -> AppConstants.STATUS_PENDING.equals(i.getStatus()))
                         .count();
@@ -111,31 +139,25 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void showAvatarMenu(View anchor) {
-        PopupMenu menu = new PopupMenu(this, anchor);
-        menu.getMenu().add(0, 0, 0, "Logout");
-        menu.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == 0) { logout(); return true; }
-            return false;
+    // ── Recent Reports ────────────────────────────────────────────────────────
+
+    private void fetchRecentReports() {
+        String uid = UserSession.get().getUserId();
+        if (uid == null) return;
+
+        issueRepo.getRecentIssues(uid, 5, new Callback<List<Issue>>() {
+            @Override
+            public void onSuccess(List<Issue> issues) {
+                recentAdapter.submitList(issues);
+                rvRecent.setVisibility(issues.isEmpty() ? View.GONE : View.VISIBLE);
+            }
+            @Override public void onError(Exception e) {
+                rvRecent.setVisibility(View.GONE);
+            }
         });
-        menu.show();
     }
 
-    private void logout() {
-        String url = supabase.authUrl + "/logout";
-        supabase.post(url, "{}", new Callback<String>() {
-            @Override public void onSuccess(String result) { clearAndGoLogin(); }
-            @Override public void onError(Exception e)     { clearAndGoLogin(); } // clear even on error
-        });
-    }
-
-    private void clearAndGoLogin() {
-        SharedPreferences prefs = getSharedPreferences(AppConstants.PREFS_NAME, MODE_PRIVATE);
-        UserSession.get().clear(prefs);
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finishAffinity();
-    }
+    // ── Theme Dialog ──────────────────────────────────────────────────────────
 
     private void showThemeDialog() {
         SharedPreferences prefs = getSharedPreferences(AppConstants.PREFS_NAME, MODE_PRIVATE);
