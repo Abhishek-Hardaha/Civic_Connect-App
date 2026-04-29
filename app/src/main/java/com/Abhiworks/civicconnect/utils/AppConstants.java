@@ -20,6 +20,7 @@ public final class AppConstants {
     public static final String PREF_USER_ID     = "user_id";
     public static final String PREF_USERNAME    = "username";
     public static final String PREF_CITY        = "city";
+    public static final String PREF_EMAIL       = "email";
     public static final String PREF_THEME_MODE  = "theme_mode";
 
     // --- Theme Mode Values ---
@@ -50,6 +51,7 @@ public final class AppConstants {
 
     // --- Intent Extras ---
     public static final String EXTRA_ISSUE_ID = "extra_issue_id";
+    public static final String EXTRA_POST     = "extra_post";
 
     private AppConstants() {}
 }

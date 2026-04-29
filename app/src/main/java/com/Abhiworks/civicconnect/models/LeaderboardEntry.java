@@ -31,6 +31,8 @@ public class LeaderboardEntry {
     public int getTotalUpvotes()    { return totalUpvotes; }
     public String getCity()         { return city; }
 
-    // Setter for rank (assigned post-parse)
-    public void setRank(int rank)   { this.rank = rank; }
+    // Setters
+    public void setRank(int rank)           { this.rank = rank; }
+    public void setReportsRaised(int count) { this.reportsRaised = count; }
+    public void setTotalUpvotes(int count)  { this.totalUpvotes = count; }
 }

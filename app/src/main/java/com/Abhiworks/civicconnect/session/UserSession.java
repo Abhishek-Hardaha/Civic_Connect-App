@@ -18,6 +18,7 @@ public class UserSession {
     private String jwt;
     private String refreshToken;
     private String userId;
+    private String email;
     private String username;
     private String city;
 
@@ -41,15 +42,17 @@ public class UserSession {
         jwt          = prefs.getString(AppConstants.PREF_JWT, null);
         refreshToken = prefs.getString(AppConstants.PREF_REFRESH, null);
         userId       = prefs.getString(AppConstants.PREF_USER_ID, null);
+        email        = prefs.getString(AppConstants.PREF_EMAIL, null);
         username     = prefs.getString(AppConstants.PREF_USERNAME, null);
         city         = prefs.getString(AppConstants.PREF_CITY, null);
     }
 
     /** Called after login or signup to persist the session. */
-    public void init(String jwt, String refresh, String userId, String username, String city) {
+    public void init(String jwt, String refresh, String userId, String email, String username, String city) {
         this.jwt          = jwt;
         this.refreshToken = refresh;
         this.userId       = userId;
+        this.email        = email;
         this.username     = username;
         this.city         = city;
     }
@@ -60,6 +63,7 @@ public class UserSession {
         editor.putString(AppConstants.PREF_JWT,      jwt);
         editor.putString(AppConstants.PREF_REFRESH,  refreshToken);
         editor.putString(AppConstants.PREF_USER_ID,  userId);
+        editor.putString(AppConstants.PREF_EMAIL,    email);
         editor.putString(AppConstants.PREF_USERNAME, username);
         editor.putString(AppConstants.PREF_CITY,     city);
         editor.apply();
@@ -80,6 +84,7 @@ public class UserSession {
         jwt          = null;
         refreshToken = null;
         userId       = null;
+        email        = null;
         username     = null;
         city         = null;
         prefs.edit().clear().apply();
@@ -104,12 +109,14 @@ public class UserSession {
     public String getJwt()          { return jwt; }
     public String getRefreshToken() { return refreshToken; }
     public String getUserId()       { return userId; }
+    public String getEmail()        { return email; }
     public String getUsername()     { return username; }
     public String getCity()         { return city; }
 
     // ── Setters (limited) ────────────────────────────────────────────────────
 
     public void setUsername(String username) { this.username = username; }
+    public void setEmail(String email)       { this.email = email; }
     public void setCity(String city)         { this.city = city; }
     public void setJwt(String jwt)           { this.jwt = jwt; }
 }

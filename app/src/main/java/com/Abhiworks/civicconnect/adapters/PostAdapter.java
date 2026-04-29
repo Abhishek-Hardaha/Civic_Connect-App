@@ -30,8 +30,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.VH> {
         void onUpvote(CommunityPost post, int position);
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(CommunityPost post);
+    }
+
     private List<CommunityPost> items = new ArrayList<>();
     private OnUpvoteClickListener upvoteListener;
+    private OnItemClickListener itemListener;
 
     // Palette for avatar backgrounds (hashed from username)
     private static final int[] AVATAR_COLORS = {
@@ -39,8 +44,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.VH> {
             0xFF00E676, 0xFFFF5252, 0xFF40C4FF
     };
 
-    public PostAdapter(OnUpvoteClickListener listener) {
-        this.upvoteListener = listener;
+    public PostAdapter(OnUpvoteClickListener upvoteListener, OnItemClickListener itemListener) {
+        this.upvoteListener = upvoteListener;
+        this.itemListener = itemListener;
     }
 
     public void submitList(List<CommunityPost> newList) {
@@ -99,6 +105,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.VH> {
         // Upvote button
         updateUpvoteButton(h.btnUpvote, post);
         h.btnUpvote.setOnClickListener(v -> upvoteListener.onUpvote(post, h.getAdapterPosition()));
+
+        // Item click
+        h.itemView.setOnClickListener(v -> itemListener.onItemClick(post));
     }
 
     @Override

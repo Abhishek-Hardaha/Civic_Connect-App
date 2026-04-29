@@ -85,7 +85,7 @@ public class SignupActivity extends AppCompatActivity {
                 String userId  = JsonParser.parseUserId(json);
 
                 SharedPreferences prefs = getSharedPreferences(AppConstants.PREFS_NAME, MODE_PRIVATE);
-                UserSession.get().init(jwt, refresh, userId, null, null);
+                UserSession.get().init(jwt, refresh, userId, email, null, null);
                 UserSession.get().saveToPrefs(prefs);
 
                 // New users always go to username setup

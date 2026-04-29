@@ -23,6 +23,9 @@ public class UserProfile {
     @SerializedName("total_upvotes")
     private int totalUpvotes;
 
+    @SerializedName("issues_resolved")
+    private int issuesResolved;
+
     @SerializedName("created_at")
     private String createdAt;
 
@@ -33,5 +36,11 @@ public class UserProfile {
     public String getCity()         { return city; }
     public int getReportsRaised()   { return reportsRaised; }
     public int getTotalUpvotes()    { return totalUpvotes; }
+    public int getIssuesResolved()  { return issuesResolved; }
     public String getCreatedAt()    { return createdAt; }
+
+    // ── Setters ──────────────────────────────────────────────────────────────
+    public void setReportsRaised(int count)  { this.reportsRaised = count; }
+    public void setTotalUpvotes(int count)   { this.totalUpvotes = count; }
+    public void setIssuesResolved(int count) { this.issuesResolved = count; }
 }

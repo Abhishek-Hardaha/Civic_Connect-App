@@ -75,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
         rvRecent.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recentAdapter = new RecentIssueAdapter(issue -> {
             Intent intent = new Intent(this, IssueDetailActivity.class);
-            intent.putExtra("issue", issue);
+            intent.putExtra(AppConstants.EXTRA_ISSUE_ID, issue.getId());
             startActivity(intent);
         });
         rvRecent.setAdapter(recentAdapter);

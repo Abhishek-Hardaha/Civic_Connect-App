@@ -30,7 +30,7 @@ import androidx.cardview.widget.CardView;
 public class IssueDetailActivity extends AppCompatActivity {
 
     private ImageView ivIssueImage;
-    private TextView tvCategory, tvStatusBadge, tvTitle, tvDate, tvLocality;
+    private TextView tvCategory, tvStatusBadge, tvTitle, tvDescription, tvDate, tvLocality;
     private CardView cardResolution;
     private TextView tvResolvedAt, tvResolutionNote;
     private ImageView ivResolutionPhoto;
@@ -51,6 +51,7 @@ public class IssueDetailActivity extends AppCompatActivity {
         tvCategory       = findViewById(R.id.tv_category);
         tvStatusBadge    = findViewById(R.id.tv_status_badge);
         tvTitle          = findViewById(R.id.tv_title);
+        tvDescription    = findViewById(R.id.tv_description);
         tvDate           = findViewById(R.id.tv_date);
         tvLocality       = findViewById(R.id.tv_locality);
         cardResolution   = findViewById(R.id.card_resolution);
@@ -92,6 +93,14 @@ public class IssueDetailActivity extends AppCompatActivity {
         tvCategory.setText(issue.getCategory());
         StatusBadgeHelper.apply(this, tvStatusBadge, issue.getStatus());
         tvTitle.setText(issue.getTitle());
+
+        if (issue.getDescription() != null && !issue.getDescription().isEmpty()) {
+            tvDescription.setVisibility(View.VISIBLE);
+            tvDescription.setText(issue.getDescription());
+        } else {
+            tvDescription.setVisibility(View.GONE);
+        }
+
         tvDate.setText("Filed on " + formatDate(issue.getCreatedAt()));
 
         if (issue.getLocality() != null && !issue.getLocality().isEmpty()) {

@@ -3,6 +3,7 @@ package com.Abhiworks.civicconnect.repository;
 import android.content.Context;
 import android.net.Uri;
 
+import com.Abhiworks.civicconnect.models.CommunityPost;
 import com.Abhiworks.civicconnect.models.Issue;
 import com.Abhiworks.civicconnect.models.LeaderboardEntry;
 import com.Abhiworks.civicconnect.models.UserProfile;
@@ -110,7 +111,7 @@ public class SupabaseIssueRepository implements IssueRepository {
     public void getProfile(String userId, Callback<UserProfile> callback) {
         String url = supabase.baseUrl + "/" + AppConstants.TABLE_PROFILES
                 + "?id=eq." + userId
-                + "&select=username,city,reports_raised,total_upvotes,created_at";
+                + "&select=username,city,reports_raised,total_upvotes,issues_resolved,created_at";
         supabase.get(url, new Callback<String>() {
             @Override public void onSuccess(String json) {
                 UserProfile profile = JsonParser.parseProfile(json);
@@ -119,6 +120,8 @@ public class SupabaseIssueRepository implements IssueRepository {
             @Override public void onError(Exception e) { callback.onError(e); }
         });
     }
+
+    // fetchRealStats removed because database is source of truth
 
     @Override
     public void checkUsernameAvailable(String username, Callback<Boolean> callback) {
@@ -153,20 +156,21 @@ public class SupabaseIssueRepository implements IssueRepository {
      */
     @Override
     public void getLeaderboard(String city, Callback<java.util.List<LeaderboardEntry>> callback) {
-        StringBuilder url = new StringBuilder(supabase.baseUrl + "/" + AppConstants.TABLE_PROFILES
-                + "?select=username,city,reports_raised,total_upvotes"
-                + "&order=reports_raised.desc"
-                + "&limit=50");
+        String url = supabase.baseUrl + "/rpc/get_city_leaderboard";
+        String body = "{}";
         if (city != null && !city.trim().isEmpty()) {
-            url.append("&city=eq.").append(city.trim());
+            body = "{\"p_city\":\"" + city.trim() + "\"}";
         }
-        supabase.get(url.toString(), new Callback<String>() {
+        supabase.postWithReturn(url, body, new Callback<String>() {
             @Override public void onSuccess(String json) {
                 java.util.List<LeaderboardEntry> list = JsonParser.parseLeaderboardList(json);
                 for (int i = 0; i < list.size(); i++) list.get(i).setRank(i + 1);
                 callback.onSuccess(list);
             }
-            @Override public void onError(Exception e) { callback.onError(e); }
+            @Override public void onError(Exception e) {
+                // If it fails with p_city, try with city parameter or no parameter
+                callback.onError(e);
+            }
         });
     }
 

@@ -84,6 +84,19 @@ public class SupabasePostRepository implements PostRepository {
         });
     }
 
+    @Override
+    public void getUserPosts(String userId, Callback<List<CommunityPost>> callback) {
+        String url = supabase.baseUrl + "/" + AppConstants.TABLE_POSTS
+                + "?user_id=eq." + userId
+                + "&select=id,upvotes";
+        supabase.get(url, new Callback<String>() {
+            @Override public void onSuccess(String json) {
+                callback.onSuccess(JsonParser.parsePostList(json));
+            }
+            @Override public void onError(Exception e) { callback.onError(e); }
+        });
+    }
+
     // ── Image Upload ─────────────────────────────────────────────────────────
 
     @Override

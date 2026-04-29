@@ -222,6 +222,14 @@ public class SupabaseService {
         execute(req, false, cb);
     }
 
+    /** Fetches the currently logged-in user's auth metadata (including email). */
+    public void getUser(Callback<String> cb) {
+        Request req = authHeaders(new Request.Builder().url(authUrl + "/user"))
+                .get()
+                .build();
+        execute(req, false, cb);
+    }
+
     /**
      * Upload a file to Supabase Storage via PUT.
      * Returns the public URL of the uploaded file via the callback.

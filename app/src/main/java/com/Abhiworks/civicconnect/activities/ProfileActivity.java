@@ -3,11 +3,17 @@ package com.Abhiworks.civicconnect.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,14 +37,15 @@ import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView tvAvatar, tvUsername, tvCity, tvMemberSince;
-    private TextView tvReportsRaised, tvUpvotes;
+    private TextView tvAvatar, tvUsername, tvEmail, tvCity, tvMemberSince;
+    private TextView tvReportsRaised, tvResolved, tvUpvotes;
     private TextView tvMyRank, tvEmpty;
     private View cardMyRank, progress;
     private RecyclerView rvLeaderboard;
 
     private SupabaseIssueRepository issueRepo;
     private SupabaseService supabase;
+    private UserProfile currentProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +74,11 @@ public class ProfileActivity extends AppCompatActivity {
         // Bind views
         tvAvatar        = findViewById(R.id.tv_avatar);
         tvUsername      = findViewById(R.id.tv_username);
+        tvEmail         = findViewById(R.id.tv_email);
         tvCity          = findViewById(R.id.tv_city);
         tvMemberSince   = findViewById(R.id.tv_member_since);
         tvReportsRaised = findViewById(R.id.tv_reports_raised);
+        tvResolved      = findViewById(R.id.tv_resolved);
         tvUpvotes       = findViewById(R.id.tv_upvotes);
         cardMyRank      = findViewById(R.id.card_my_rank);
         tvMyRank        = findViewById(R.id.tv_my_rank);
@@ -82,6 +91,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Populate static session fields immediately (no network needed)
         populateHeaderFromSession();
+
+        findViewById(R.id.btn_edit_username).setOnClickListener(v -> showEditUsernameDialog());
     }
 
     @Override
@@ -96,17 +107,49 @@ public class ProfileActivity extends AppCompatActivity {
     private void populateHeaderFromSession() {
         String username = UserSession.get().getUsername();
         String city     = UserSession.get().getCity();
+        String email    = UserSession.get().getEmail();
 
         if (username != null && !username.isEmpty()) {
             tvAvatar.setText(String.valueOf(username.charAt(0)).toUpperCase());
             tvUsername.setText("@" + username);
         }
+
+        // Show email if available, else try to fetch it
+        if (email != null && !email.isEmpty()) {
+            tvEmail.setText(email);
+            tvEmail.setVisibility(View.VISIBLE);
+        } else {
+            tvEmail.setVisibility(View.GONE);
+            fetchAuthEmail();
+        }
+
         if (city != null && !city.isEmpty()) {
             tvCity.setText("📍 " + city);
             tvCity.setVisibility(View.VISIBLE);
         } else {
             tvCity.setVisibility(View.GONE);
         }
+    }
+
+    private void fetchAuthEmail() {
+        supabase.getUser(new Callback<String>() {
+            @Override
+            public void onSuccess(String json) {
+                String email = com.Abhiworks.civicconnect.utils.JsonParser.parseEmail(json);
+                if (email != null && !email.isEmpty()) {
+                    UserSession.get().setEmail(email);
+                    tvEmail.setText(email);
+                    tvEmail.setVisibility(View.VISIBLE);
+                    
+                    // Persist it so we don't have to fetch it next time
+                    getSharedPreferences(AppConstants.PREFS_NAME, MODE_PRIVATE)
+                            .edit().putString(AppConstants.PREF_EMAIL, email).apply();
+                }
+            }
+            @Override public void onError(Exception e) { 
+                Log.e("ProfileActivity", "Failed to fetch auth email", e);
+            }
+        });
     }
 
     // ── Profile (stats + joined date) ─────────────────────────────────────────
@@ -120,9 +163,14 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UserProfile profile) {
                 showProgress(false);
-                if (profile == null) return;
+                if (profile == null) {
+                    Toast.makeText(ProfileActivity.this, "Profile not found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                currentProfile = profile;
 
                 tvReportsRaised.setText(String.valueOf(profile.getReportsRaised()));
+                tvResolved.setText(String.valueOf(profile.getIssuesResolved()));
                 tvUpvotes.setText(String.valueOf(profile.getTotalUpvotes()));
 
                 // Update city if now available
@@ -140,7 +188,10 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onError(Exception e) { showProgress(false); }
+            public void onError(Exception e) {
+                showProgress(false);
+                Toast.makeText(ProfileActivity.this, "Error loading stats: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -160,10 +211,16 @@ public class ProfileActivity extends AppCompatActivity {
                 tvEmpty.setVisibility(View.GONE);
                 rvLeaderboard.setVisibility(View.VISIBLE);
 
-                // Find current user's rank
+                // Find current user's rank and update stats from the fresh profile
                 String me = UserSession.get().getUsername();
                 for (LeaderboardEntry e : entries) {
                     if (e.getUsername() != null && e.getUsername().equals(me)) {
+                        // Inject fresh stats into the leaderboard entry for the current user
+                        if (currentProfile != null) {
+                            e.setReportsRaised(currentProfile.getReportsRaised());
+                            e.setTotalUpvotes(currentProfile.getTotalUpvotes());
+                        }
+
                         cardMyRank.setVisibility(View.VISIBLE);
                         tvMyRank.setText("#" + e.getRank() + " of " + entries.size() + " users"
                                 + (city != null && !city.isEmpty() ? " in " + city : ""));
@@ -198,6 +255,86 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finishAffinity();
+    }
+
+    // ── Edit Username ────────────────────────────────────────────────────────
+
+    private void showEditUsernameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Update Username");
+
+        final EditText input = new EditText(this);
+        input.setHint("Enter new username");
+        input.setText(UserSession.get().getUsername());
+        
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(60, 20, 60, 0);
+        input.setLayoutParams(params);
+        container.addView(input);
+        
+        builder.setView(container);
+
+        builder.setPositiveButton("Update", (dialog, which) -> {
+            String newUsername = input.getText().toString().trim();
+            if (newUsername.isEmpty()) {
+                Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (newUsername.equals(UserSession.get().getUsername())) return;
+
+            checkAndSetUsername(newUsername);
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    private void checkAndSetUsername(String newUsername) {
+        showProgress(true);
+        issueRepo.checkUsernameAvailable(newUsername, new Callback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean available) {
+                if (available) {
+                    performUsernameUpdate(newUsername);
+                } else {
+                    showProgress(false);
+                    Toast.makeText(ProfileActivity.this, "Username already taken", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onError(Exception e) {
+                showProgress(false);
+                Toast.makeText(ProfileActivity.this, "Check failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void performUsernameUpdate(String newUsername) {
+        String uid = UserSession.get().getUserId();
+        issueRepo.setUsername(uid, newUsername, new Callback<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                showProgress(false);
+                UserSession.get().setUsername(newUsername);
+                getSharedPreferences(AppConstants.PREFS_NAME, MODE_PRIVATE)
+                        .edit().putString(AppConstants.PREF_USERNAME, newUsername).apply();
+                
+                populateHeaderFromSession();
+                Toast.makeText(ProfileActivity.this, "Username updated!", Toast.LENGTH_SHORT).show();
+                
+                // Refresh leaderboard to show new name
+                loadLeaderboard();
+            }
+            @Override
+            public void onError(Exception e) {
+                showProgress(false);
+                Toast.makeText(ProfileActivity.this, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

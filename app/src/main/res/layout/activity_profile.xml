@@ -77,15 +77,48 @@
                                 android:text="A"/>
                         </androidx.cardview.widget.CardView>
 
-                        <!-- Username -->
-                        <TextView
-                            android:id="@+id/tv_username"
+                        <!-- Username + Edit -->
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="24dp"
-                            android:textColor="@color/white"
-                            android:textSize="28sp"
-                            android:textStyle="bold"/>
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_username"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/white"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                android:text="@username"/>
+
+                            <ImageButton
+                                android:id="@+id/btn_edit_username"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginStart="8dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_edit"
+                                app:tint="@color/white"
+                                android:padding="8dp"
+                                android:scaleType="fitCenter"/>
+                        </LinearLayout>
+
+                        <!-- Email -->
+                        <TextView
+                            android:id="@+id/tv_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="#BFEAF2"
+                            android:textSize="15sp"
+                            android:alpha="0.9"
+                            android:drawableStart="@drawable/ic_email"
+                            android:drawablePadding="6dp"
+                            app:drawableTint="#BFEAF2"
+                            android:visibility="gone"/>
 
                         <!-- City -->
                         <TextView
@@ -123,21 +156,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
-                    app:cardCornerRadius="28dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="24dp"
                     app:cardElevation="4dp">
                     
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="24dp"
+                        android:padding="16dp"
                         android:background="@drawable/bg_gradient_cyan"
                         android:gravity="center">
 
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:src="@drawable/ic_reports"
                             app:tint="@color/white"/>
 
@@ -145,10 +178,10 @@
                             android:id="@+id/tv_reports_raised"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="4dp"
                             android:text="0"
                             android:textColor="@color/white"
-                            android:textSize="28sp"
+                            android:textSize="22sp"
                             android:textStyle="bold"/>
 
                         <TextView
@@ -156,7 +189,52 @@
                             android:layout_height="wrap_content"
                             android:text="REPORTS"
                             android:textColor="#E0F2FE"
-                            android:textSize="11sp"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.1"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Resolved Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:background="@drawable/bg_gradient_green"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_resolved"
+                            app:tint="@color/white"/>
+
+                        <TextView
+                            android:id="@+id/tv_resolved"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="RESOLVED"
+                            android:textColor="#F0FDF4"
+                            android:textSize="9sp"
                             android:textStyle="bold"
                             android:textAllCaps="true"
                             android:letterSpacing="0.1"/>
@@ -168,21 +246,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    app:cardCornerRadius="28dp"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="24dp"
                     app:cardElevation="4dp">
                     
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="24dp"
+                        android:padding="16dp"
                         android:background="@drawable/bg_gradient_purple"
                         android:gravity="center">
 
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:src="@drawable/ic_upvote"
                             app:tint="@color/white"/>
 
@@ -190,10 +268,10 @@
                             android:id="@+id/tv_upvotes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="4dp"
                             android:text="0"
                             android:textColor="@color/white"
-                            android:textSize="28sp"
+                            android:textSize="22sp"
                             android:textStyle="bold"/>
 
                         <TextView
@@ -201,7 +279,7 @@
                             android:layout_height="wrap_content"
                             android:text="UPVOTES"
                             android:textColor="#F5F3FF"
-                            android:textSize="11sp"
+                            android:textSize="9sp"
                             android:textStyle="bold"
                             android:textAllCaps="true"
                             android:letterSpacing="0.1"/>

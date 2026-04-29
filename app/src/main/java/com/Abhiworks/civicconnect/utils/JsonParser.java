@@ -109,6 +109,19 @@ public class JsonParser {
         return null;
     }
 
+    /**
+     * Parses the email from either a token response (nested in 'user') or a user response.
+     */
+    public static String parseEmail(String json) {
+        try {
+            JSONObject obj = new JSONObject(json);
+            if (obj.has("email")) return obj.optString("email", null);
+            JSONObject user = obj.optJSONObject("user");
+            if (user != null) return user.optString("email", null);
+        } catch (Exception ignored) {}
+        return null;
+    }
+
     /** Returns true if a PostgREST array response has at least one element. */
     public static boolean hasRows(String json) {
         try {

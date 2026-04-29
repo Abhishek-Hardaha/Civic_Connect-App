@@ -3,6 +3,8 @@ package com.Abhiworks.civicconnect.activities;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,8 +47,8 @@ import java.io.IOException;
 
 public class ReportIssueActivity extends AppCompatActivity {
 
-    private TextInputLayout tilTitle, tilLocality;
-    private TextInputEditText etTitle, etLocality;
+    private TextInputLayout tilTitle, tilLocality, tilDescription;
+    private TextInputEditText etTitle, etLocality, etDescription;
     private ChipGroup chipGroupCategory;
     private TextView tvCategoryError, tvLocationResult;
     private FrameLayout cardPhoto;
@@ -79,8 +81,10 @@ public class ReportIssueActivity extends AppCompatActivity {
 
         tilTitle       = findViewById(R.id.til_title);
         tilLocality    = findViewById(R.id.til_locality);
+        tilDescription = findViewById(R.id.til_description);
         etTitle        = findViewById(R.id.et_title);
         etLocality     = findViewById(R.id.et_locality);
+        etDescription  = findViewById(R.id.et_description);
         chipGroupCategory = findViewById(R.id.chip_group_category);
         tvCategoryError   = findViewById(R.id.tv_category_error);
         tvLocationResult  = findViewById(R.id.tv_location_result);
@@ -238,6 +242,24 @@ public class ReportIssueActivity extends AppCompatActivity {
                 longitude = loc.getLongitude();
                 tvLocationResult.setVisibility(View.VISIBLE);
                 tvLocationResult.setText(String.format("📍 %.5f, %.5f", latitude, longitude));
+                
+                // Automatically reverse geocode to get locality
+                try {
+                    Geocoder geocoder = new Geocoder(ReportIssueActivity.this, java.util.Locale.getDefault());
+                    java.util.List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address addr = addresses.get(0);
+                        String localityStr = addr.getLocality();
+                        if (localityStr == null) localityStr = addr.getSubAdminArea();
+                        if (localityStr == null) localityStr = addr.getAdminArea();
+                        
+                        if (localityStr != null && !localityStr.isEmpty()) {
+                            etLocality.setText(localityStr);
+                        }
+                    }
+                } catch (Exception e) {
+                    // Ignore geocoder errors; user can still type manually
+                }
             }
             @Override
             public void onError(Exception e) {
@@ -257,9 +279,10 @@ public class ReportIssueActivity extends AppCompatActivity {
     }
 
     private void submit() {
-        String title    = etTitle.getText() != null ? etTitle.getText().toString().trim() : "";
-        int checkedId   = chipGroupCategory.getCheckedChipId();
-        String locality = etLocality.getText() != null ? etLocality.getText().toString().trim() : "";
+        String title       = etTitle.getText() != null ? etTitle.getText().toString().trim() : "";
+        String description = etDescription.getText() != null ? etDescription.getText().toString().trim() : "";
+        int checkedId      = chipGroupCategory.getCheckedChipId();
+        String locality    = etLocality.getText() != null ? etLocality.getText().toString().trim() : "";
 
         tilTitle.setError(null);
         tvCategoryError.setVisibility(View.GONE);
@@ -276,6 +299,7 @@ public class ReportIssueActivity extends AppCompatActivity {
         showLoader(true);
 
         Issue.Builder builder = new Issue.Builder(title, category, userId)
+                .description(description.isEmpty() ? null : description)
                 .latitude(latitude)
                 .longitude(longitude)
                 .locality(locality.isEmpty() ? null : locality);
@@ -307,6 +331,7 @@ public class ReportIssueActivity extends AppCompatActivity {
                 Snackbar.make(tilTitle, getString(R.string.issue_submitted), Snackbar.LENGTH_LONG).show();
                 // Clear form
                 etTitle.setText("");
+                etDescription.setText("");
                 chipGroupCategory.clearCheck();
                 etLocality.setText("");
                 latitude = null; longitude = null;

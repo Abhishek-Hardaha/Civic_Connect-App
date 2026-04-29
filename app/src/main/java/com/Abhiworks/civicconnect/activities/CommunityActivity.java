@@ -20,7 +20,7 @@ import com.Abhiworks.civicconnect.session.UserSession;
 import com.Abhiworks.civicconnect.utils.AppConstants;
 import com.Abhiworks.civicconnect.utils.AuthException;
 import com.Abhiworks.civicconnect.utils.Callback;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -47,14 +47,14 @@ public class CommunityActivity extends AppCompatActivity {
         swipeRefresh = findViewById(R.id.swipe_refresh);
         layoutEmpty  = findViewById(R.id.layout_empty);
 
-        adapter = new PostAdapter(this::handleUpvote);
+        adapter = new PostAdapter(this::handleUpvote, this::onPostClicked);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
 
         swipeRefresh.setColorSchemeColors(getColor(R.color.cyan));
         swipeRefresh.setOnRefreshListener(this::loadPosts);
 
-        FloatingActionButton fab = findViewById(R.id.fab_add_post);
+        ExtendedFloatingActionButton fab = findViewById(R.id.fab_add_post);
         fab.setOnClickListener(v ->
                 startActivity(new Intent(this, AddPostActivity.class)));
 
@@ -137,5 +137,11 @@ public class CommunityActivity extends AppCompatActivity {
             Snackbar.make(recycler, getString(R.string.error_network), Snackbar.LENGTH_LONG)
                     .setAction("Retry", v -> loadPosts()).show();
         }
+    }
+
+    private void onPostClicked(CommunityPost post) {
+        Intent intent = new Intent(this, PostDetailActivity.class);
+        intent.putExtra(AppConstants.EXTRA_POST, post);
+        startActivity(intent);
     }
 }

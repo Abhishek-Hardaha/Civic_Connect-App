@@ -21,6 +21,9 @@ public interface PostRepository {
     /** Call the increment_upvotes RPC. */
     void upvotePost(String postId, String userId, Callback<Void> callback);
 
+    /** Fetch all posts for a specific user. */
+    void getUserPosts(String userId, Callback<List<CommunityPost>> callback);
+
     /** Upload a community image and return its public URL. */
     void uploadPostImage(android.net.Uri imageUri, String userId, Callback<String> callback);
 }

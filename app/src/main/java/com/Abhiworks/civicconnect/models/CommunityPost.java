@@ -2,13 +2,14 @@ package com.Abhiworks.civicconnect.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Represents a community feed post.
  * author_username is denormalized — copied from profiles at insert time to avoid a JOIN.
  */
-public class CommunityPost {
+public class CommunityPost implements Serializable {
 
     @SerializedName("id")
     private String id;

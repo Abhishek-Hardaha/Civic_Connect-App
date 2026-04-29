@@ -69,6 +69,8 @@
             android:name=".activities.AddPostActivity"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity android:name=".activities.PostDetailActivity" />
+
         <!-- FileProvider for camera captures -->
         <provider
             android:name="androidx.core.content.FileProvider"

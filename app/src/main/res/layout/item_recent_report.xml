@@ -26,8 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"
-                app:tint="@color/bg_card_elevated"/>
+                android:src="@drawable/bg_placeholder"/>
             
             <TextView
                 android:id="@+id/tv_status_badge"

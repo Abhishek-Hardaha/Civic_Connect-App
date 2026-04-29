@@ -51,7 +51,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             default: rankLabel = "#" + entry.getRank();
         }
         h.tvRank.setText(rankLabel);
-        h.tvUsername.setText(entry.getUsername() != null ? entry.getUsername() : "—");
+        
+        String name = entry.getUsername();
+        if (name != null && !name.isEmpty()) {
+            h.tvUsername.setText("@" + name);
+        } else {
+            h.tvUsername.setText("Citizen #" + entry.getRank());
+            h.tvUsername.setAlpha(0.6f); // De-emphasize anonymous users
+        }
+
         h.tvReports.setText(String.valueOf(entry.getReportsRaised()));
         h.tvUpvotes.setText(String.valueOf(entry.getTotalUpvotes()));
 
