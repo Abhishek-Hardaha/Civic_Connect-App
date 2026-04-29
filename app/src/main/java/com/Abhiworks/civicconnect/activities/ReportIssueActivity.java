@@ -101,9 +101,26 @@ public class ReportIssueActivity extends AppCompatActivity {
             chip.setCheckable(true);
             chip.setChipBackgroundColorResource(R.color.bg_card);
             chip.setTextColor(getColor(R.color.text_secondary));
+            chip.setChipStrokeWidth(2f);
+            chip.setChipStrokeColorResource(R.color.bg_dark);
             chip.setCheckedIconVisible(false);
             chipGroupCategory.addView(chip);
         }
+
+        chipGroupCategory.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            for (int i = 0; i < group.getChildCount(); i++) {
+                Chip c = (Chip) group.getChildAt(i);
+                if (c.isChecked()) {
+                    c.setChipBackgroundColorResource(R.color.cyan);
+                    c.setTextColor(getColor(R.color.black));
+                    c.setChipStrokeWidth(0f);
+                } else {
+                    c.setChipBackgroundColorResource(R.color.bg_card);
+                    c.setTextColor(getColor(R.color.text_secondary));
+                    c.setChipStrokeWidth(2f);
+                }
+            }
+        });
 
         // Photo card
         cardPhoto.setOnClickListener(v -> showImageSourceDialog());
@@ -160,7 +177,7 @@ public class ReportIssueActivity extends AppCompatActivity {
     private void showImageSourceDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Add Photo")
-                .setItems(new String[]{"📷 Camera", "🖼 Gallery"}, (dialog, which) -> {
+                .setItems(new String[]{"Camera", "Gallery"}, (dialog, which) -> {
                     if (which == 0) checkCameraPermissionAndOpen();
                     else            openGallery();
                 })
@@ -241,7 +258,7 @@ public class ReportIssueActivity extends AppCompatActivity {
                 latitude  = loc.getLatitude();
                 longitude = loc.getLongitude();
                 tvLocationResult.setVisibility(View.VISIBLE);
-                tvLocationResult.setText(String.format("📍 %.5f, %.5f", latitude, longitude));
+                tvLocationResult.setText(String.format("%.5f, %.5f", latitude, longitude));
                 
                 // Automatically reverse geocode to get locality
                 try {

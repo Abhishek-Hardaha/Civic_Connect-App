@@ -93,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
         populateHeaderFromSession();
 
         findViewById(R.id.btn_edit_username).setOnClickListener(v -> showEditUsernameDialog());
+        findViewById(R.id.btn_logout).setOnClickListener(v -> logout());
     }
 
     @Override

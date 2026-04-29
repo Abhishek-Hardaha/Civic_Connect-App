@@ -46,8 +46,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Evidence"
+                        android:drawableStart="@drawable/ic_camera"
+                        android:drawablePadding="8dp"
                         android:textColor="@color/text_primary"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
                     <FrameLayout
@@ -64,11 +66,11 @@
                             android:layout_gravity="center"
                             android:orientation="vertical"
                             android:gravity="center">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="📸"
-                                android:textSize="48sp"/>
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_camera"
+                                app:tint="@color/text_secondary"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -127,8 +129,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Information"
+                        android:drawableStart="@drawable/ic_info"
+                        android:drawablePadding="8dp"
                         android:textColor="@color/text_primary"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
                     <com.google.android.material.textfield.TextInputLayout
@@ -227,8 +231,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Location"
+                        android:drawableStart="@drawable/ic_location"
+                        android:drawablePadding="8dp"
                         android:textColor="@color/text_primary"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"/>
                     <com.google.android.material.button.MaterialButton
@@ -236,7 +242,8 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📍 Use GPS Location"
+                        android:text="Use GPS Location"
+                        app:icon="@drawable/ic_location"
                         android:textColor="@color/cyan"
                         app:rippleColor="@color/cyan_tint"
                         android:insetTop="0dp"
@@ -277,14 +284,26 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <Button
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginBottom="16dp"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_submit"
                 style="@style/CivicConnect.Button.Primary"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="64dp"
                 android:layout_marginBottom="32dp"
                 android:text="Submit Report"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_send"
+                app:iconGravity="textEnd" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

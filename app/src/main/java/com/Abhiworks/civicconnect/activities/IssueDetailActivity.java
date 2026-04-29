@@ -31,7 +31,7 @@ public class IssueDetailActivity extends AppCompatActivity {
 
     private ImageView ivIssueImage;
     private TextView tvCategory, tvStatusBadge, tvTitle, tvDescription, tvDate, tvLocality;
-    private CardView cardResolution;
+    private CardView cardIssueImage, cardResolution;
     private TextView tvResolvedAt, tvResolutionNote;
     private ImageView ivResolutionPhoto;
     private SupabaseIssueRepository issueRepo;
@@ -54,6 +54,7 @@ public class IssueDetailActivity extends AppCompatActivity {
         tvDescription    = findViewById(R.id.tv_description);
         tvDate           = findViewById(R.id.tv_date);
         tvLocality       = findViewById(R.id.tv_locality);
+        cardIssueImage   = findViewById(R.id.card_issue_image);
         cardResolution   = findViewById(R.id.card_resolution);
         tvResolvedAt     = findViewById(R.id.tv_resolved_at);
         tvResolutionNote = findViewById(R.id.tv_resolution_note);
@@ -86,7 +87,7 @@ public class IssueDetailActivity extends AppCompatActivity {
 
         // Issue image
         if (issue.hasImage()) {
-            ivIssueImage.setVisibility(View.VISIBLE);
+            cardIssueImage.setVisibility(View.VISIBLE);
             Glide.with(this).load(issue.getImageUrl()).centerCrop().into(ivIssueImage);
         }
 
@@ -105,7 +106,7 @@ public class IssueDetailActivity extends AppCompatActivity {
 
         if (issue.getLocality() != null && !issue.getLocality().isEmpty()) {
             tvLocality.setVisibility(View.VISIBLE);
-            tvLocality.setText("📍 " + issue.getLocality());
+            tvLocality.setText(issue.getLocality());
         }
 
         // Resolution section — only when resolved

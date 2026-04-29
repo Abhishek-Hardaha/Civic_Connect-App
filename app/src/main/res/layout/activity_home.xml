@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pulse"
+                android:text="Connect"
                 android:textColor="@color/cyan"
                 android:textSize="22sp"
                 android:textStyle="bold"/>
@@ -111,15 +111,15 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_gradient_cyan"
                     android:padding="28dp">
-                    <TextView
+                    <ImageView
                         android:id="@+id/icon_report"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:gravity="center"
-                        android:text="📍"
-                        android:textSize="30sp"
+                        android:padding="16dp"
+                        android:src="@drawable/ic_location"
                         android:background="@drawable/bg_icon_circle_cyan"
-                        android:backgroundTint="#25FFFFFF"/>
+                        android:backgroundTint="#25FFFFFF"
+                        app:tint="@color/white"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -169,15 +169,15 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_gradient_purple"
                     android:padding="28dp">
-                    <TextView
+                    <ImageView
                         android:id="@+id/icon_comm"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:gravity="center"
-                        android:text="🌐"
-                        android:textSize="30sp"
+                        android:padding="16dp"
+                        android:src="@drawable/ic_public"
                         android:background="@drawable/bg_icon_circle_purple"
-                        android:backgroundTint="#25FFFFFF"/>
+                        android:backgroundTint="#25FFFFFF"
+                        app:tint="@color/white"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -229,15 +229,15 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="28dp">
-                    <TextView
+                    <ImageView
                         android:id="@+id/icon_my_reports"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:gravity="center"
-                        android:text="📋"
-                        android:textSize="30sp"
+                        android:padding="16dp"
+                        android:src="@drawable/ic_assignment"
                         android:background="@drawable/bg_icon_circle_amber"
-                        android:backgroundTint="#15D97706"/>
+                        android:backgroundTint="#15D97706"
+                        app:tint="@color/amber_accent"/>
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

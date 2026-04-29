@@ -27,6 +27,7 @@
     <color name="purple_tint">#1A7C3AED</color>
     <color name="amber_accent">#D97706</color> <!-- Amber 600 -->
     <color name="amber_tint">#1AD97706</color>
+    <color name="gold">#F59E0B</color> <!-- Amber 500 -->
 
     <!-- Text colors - High Contrast -->
     <color name="text_primary">#0F172A</color> <!-- Slate 900 -->

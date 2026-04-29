@@ -96,11 +96,11 @@
                 android:gravity="center"
                 android:padding="32dp"
                 android:visibility="gone">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="📋"
-                    android:textSize="56sp"/>
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_assignment"
+                    app:tint="@color/text_secondary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

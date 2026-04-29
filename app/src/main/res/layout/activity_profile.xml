@@ -303,11 +303,11 @@
                     android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🏆"
-                    android:textSize="24sp"/>
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_trophy"
+                    app:tint="@color/gold"/>
             </LinearLayout>
 
             <!-- User rank highlight card -->
@@ -330,7 +330,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="🎯 Your Current Position"
+                        android:text="Your Current Position"
+                        android:drawableStart="@drawable/ic_target"
+                        android:drawablePadding="8dp"
                         android:textColor="@color/cyan"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
@@ -419,6 +421,27 @@
                         android:visibility="gone"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <!-- Logout Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_logout"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="48dp"
+                android:text="Logout"
+                android:textColor="#EF4444"
+                app:strokeColor="#EF4444"
+                app:strokeWidth="1dp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_logout"
+                app:iconTint="#EF4444"
+                app:rippleColor="#1AEF4444"
+                android:textAllCaps="false"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="12dp"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
