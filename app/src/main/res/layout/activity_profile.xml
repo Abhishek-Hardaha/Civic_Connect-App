@@ -303,11 +303,12 @@
                     android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold"/>
+
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_trophy"
-                    app:tint="@color/gold"/>
+                    android:src="@drawable/ic_public"
+                    app:tint="@color/gold" />
             </LinearLayout>
 
             <!-- User rank highlight card -->
