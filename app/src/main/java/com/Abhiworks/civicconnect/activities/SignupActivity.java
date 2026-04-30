@@ -88,9 +88,16 @@ public class SignupActivity extends AppCompatActivity {
                 UserSession.get().init(jwt, refresh, userId, email, null, null);
                 UserSession.get().saveToPrefs(prefs);
 
-                // New users always go to username setup
-                startActivity(new Intent(SignupActivity.this, SetUsernameActivity.class));
-                finish();
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(SignupActivity.this)
+                        .setTitle("Check Your Email")
+                        .setMessage("We've sent a verification link to " + email + ". Please check your inbox and verify your account.")
+                        .setIcon(R.drawable.ic_email)
+                        .setPositiveButton("Continue", (dialog, which) -> {
+                            startActivity(new Intent(SignupActivity.this, SetUsernameActivity.class));
+                            finish();
+                        })
+                        .setCancelable(false)
+                        .show();
             }
 
             @Override

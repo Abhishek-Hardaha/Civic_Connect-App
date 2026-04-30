@@ -18,18 +18,18 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginTop="80dp"
-            android:src="@drawable/ic_sparkles"
-            app:tint="@color/cyan"/>
+            android:src="@drawable/ic_handshake"
+            app:tint="@color/cyan" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Choose your identity"
+            android:gravity="center"
+            android:text="Choose your Username"
             android:textColor="@color/text_primary"
             android:textSize="32sp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
